@@ -1,17 +1,44 @@
-import { loginValidation, observador } from './global.js';
+import {ctrlaccessuser}from "./global.js";
 
-const loginForm = document.getElementById('loginForm');
+const login = document.getElementById('btnlogin')
 
-loginForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
+async function logear() {
+    const email=document.getElementById('edtuser').value
+    const password=document.getElementById('edtpsw').value
 
-  try {
-    await loginValidation(email, password);
-    observador();
-  } catch (error) {
-    console.error("Error en el inicio de sesión:", error);
-    alert("Credenciales incorrectas o usuario no registrado.");
-  }
+    try {
+        const validar= await ctrlaccessuser(email,password)
+        const user=validar.user
+
+        if(user.email==='alejandromogaco611@gmail.com'){
+            alert('Wellcome Administrator: '+email)
+            console.log('Authentication successfull: '+email)
+            window.location.href = "/Templates/main_admin.html";
+        }else{
+            alert('Wellcome Usuario: '+email)
+            console.log('Authentication successfull: '+email)
+            window.location.href="/Templates/main_user.html";
+        }
+     
+    } catch (error) {
+        alert('Error of Authentication: '+error.message)
+        console.log('Error of Authentication: '+error)
+    }
+}
+document.addEventListener('DOMContentLoaded', () => {
+    const passwordInput = document.getElementById('edtpsw');
+    const togglePassword = document.getElementById('togglePassword');
+
+    togglePassword.addEventListener('change', () => {
+        if (togglePassword.checked) {
+            passwordInput.type = 'text'; 
+        } else {
+            passwordInput.type = 'password'; 
+        }
+    });
+});
+
+
+window.addEventListener('DOMContentLoaded',()=>{
+    login.addEventListener('click',logear)
 });
